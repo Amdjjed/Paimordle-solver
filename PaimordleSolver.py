@@ -13,7 +13,12 @@ from selenium.webdriver.chrome.options import Options
 
 
 def getWordList():
-    js_url="https://paimordle.vercel.app/static/js/main.2605b011.js"
+    url="https://paimordle.vercel.app/"
+    req=requests.get(url,'html.parser').text
+    start= req.find("src=")+len("src=")+1
+    end=req.find(">",start)-1
+    url_end=req[start:end]
+    js_url="https://paimordle.vercel.app"+url_end
     req_text=requests.get(js_url).text
     start= req_text.find("],c=")+len("],c=")
     end=req_text.find("],f=",start)+1

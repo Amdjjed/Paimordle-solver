@@ -13,7 +13,7 @@ from selenium.webdriver.chrome.options import Options
 
 
 def getWordList():
-    js_url="https://paimordle.vercel.app/static/js/main.8173cb18.js"
+    js_url="https://paimordle.vercel.app/static/js/main.2605b011.js"
     req_text=requests.get(js_url).text
     start= req_text.find("],c=")+len("],c=")
     end=req_text.find("],f=",start)+1
@@ -59,8 +59,12 @@ def sendWord(element,word,turn):
 
 
 def filterWordBank(colors,word,wordBank):
+    for color,letter in zip(colors,word):
+        if color=='green' or color=='yellow' and letter not in existingLetters:
+            existingLetters.append(letter)
+
     for i in range(len(colors)):
-        if colors[i]=='slate':
+        if colors[i]=='slate' and word[i] not in existingLetters:
             wordBank=[x for x in wordBank if word[i] not in x]
         if colors[i]=='green':
             wordBank=[x for x in wordBank if word[i]==x[i]]
@@ -69,7 +73,7 @@ def filterWordBank(colors,word,wordBank):
     return wordBank
 
 
-
+existingLetters=[]
 wordBank=getWordList()
 driver,game=openWebsite()
 count=1
